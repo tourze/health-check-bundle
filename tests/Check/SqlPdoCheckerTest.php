@@ -12,27 +12,22 @@ use Laminas\Diagnostics\Result\Skip;
 use Laminas\Diagnostics\Result\Success;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @phpstan-import-type ConnectionMock = Connection&MockObject
- * @phpstan-import-type SqlCheckerMock = SqlChecker&MockObject
- * @phpstan-import-type ResultMock = Result&MockObject
- */
 class SqlPdoCheckerTest extends TestCase
 {
     /**
-     * @var SqlCheckerMock
+     * @var SqlChecker&MockObject
      */
     private $sqlChecker;
 
     /**
-     * @var ConnectionMock
+     * @var Connection&MockObject
      */
     private $connection;
 
     private SqlPdoChecker $checker;
 
     /**
-     * @var ResultMock
+     * @var Result&MockObject
      */
     private $result;
 

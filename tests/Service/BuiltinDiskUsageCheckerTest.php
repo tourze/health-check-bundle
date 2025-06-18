@@ -37,10 +37,30 @@ class BuiltinDiskUsageCheckerTest extends TestCase
      */
     public function testCheckResultsWithDifferentThresholds(): void
     {
-        // 为了简化测试，我们不模拟具体的检查逻辑，只测试标签和初始化参数
-        $this->markTestSkipped('需要模拟磁盘使用情况才能进行完整测试');
-
-        // 注意：在实际环境中，这些测试需要更复杂的设置来模拟磁盘使用情况
-        // 可能需要使用 vfsStream 等虚拟文件系统
+        $checker = new BuiltinDiskUsageChecker();
+        
+        // 测试check方法返回的是Result对象
+        $result = $checker->check();
+        $this->assertInstanceOf(\Laminas\Diagnostics\Result\ResultInterface::class, $result);
+        
+        // 测试实际磁盘使用情况
+        // 因为这是在真实环境中运行，我们只验证结果的类型
+        $possibleResults = [
+            \Laminas\Diagnostics\Result\Success::class,
+            \Laminas\Diagnostics\Result\Warning::class,
+            \Laminas\Diagnostics\Result\Failure::class,
+        ];
+        
+        $resultClass = get_class($result);
+        $this->assertContains($resultClass, $possibleResults, 
+            sprintf('Result should be one of Success/Warning/Failure, got %s', $resultClass));
+        
+        // 验证结果消息格式
+        $message = $result->getMessage();
+        $this->assertNotEmpty($message);
+        
+        // 消息应该包含百分比信息 - 注意匹配 "percent" 或 "%"
+        $this->assertMatchesRegularExpression('/\d+(\.\d+)?(\s+percent|%)/', $message, 
+            'Result message should contain percentage');
     }
 }

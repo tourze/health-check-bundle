@@ -11,31 +11,25 @@ use HealthCheckBundle\Service\CheckerService;
 use Laminas\Diagnostics\Check\CheckInterface;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @phpstan-import-type EntityManagerMock = EntityManagerInterface&MockObject
- * @phpstan-import-type SqlCheckerRepositoryMock = SqlCheckerRepository&MockObject
- * @phpstan-import-type CheckInterfaceMock = CheckInterface&MockObject
- * @phpstan-import-type ConnectionMock = Connection&MockObject
- */
 class CheckerServiceTest extends TestCase
 {
     /**
-     * @var EntityManagerMock
+     * @var EntityManagerInterface&MockObject
      */
     private $entityManager;
 
     /**
-     * @var SqlCheckerRepositoryMock
+     * @var SqlCheckerRepository&MockObject
      */
     private $sqlCheckerRepository;
 
     /**
-     * @var CheckInterfaceMock[]
+     * @var array<CheckInterface&MockObject>
      */
     private array $builtInCheckers;
 
     /**
-     * @var ConnectionMock
+     * @var Connection&MockObject
      */
     private $connection;
 
