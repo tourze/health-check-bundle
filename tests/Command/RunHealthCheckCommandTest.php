@@ -7,17 +7,15 @@ use HealthCheckBundle\Service\CheckerService;
 use Laminas\Diagnostics\Check\CheckInterface;
 use Laminas\Diagnostics\Result\Failure;
 use Laminas\Diagnostics\Result\Success;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-/**
- * @phpstan-import-type CheckerServiceMock = CheckerService&MockObject
- */
 class RunHealthCheckCommandTest extends TestCase
 {
     /**
-     * @var CheckerServiceMock
+     * @var CheckerService&MockObject
      */
     private $checkerService;
 

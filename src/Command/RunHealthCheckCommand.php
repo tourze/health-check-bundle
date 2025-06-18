@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'health-check:run',
+    name: self::NAME,
     description: '运行所有健康检查',
 )]
 class RunHealthCheckCommand extends Command

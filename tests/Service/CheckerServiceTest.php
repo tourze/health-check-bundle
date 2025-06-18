@@ -9,6 +9,7 @@ use HealthCheckBundle\Entity\SqlChecker;
 use HealthCheckBundle\Repository\SqlCheckerRepository;
 use HealthCheckBundle\Service\CheckerService;
 use Laminas\Diagnostics\Check\CheckInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CheckerServiceTest extends TestCase

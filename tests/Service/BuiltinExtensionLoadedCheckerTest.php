@@ -114,7 +114,7 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
             'require' => [
                 'php' => '^8.1',
                 'ext-json' => '*',
-                'ext-json' => '*', // 故意重复
+                'ext-mbstring' => '*',
                 'symfony/http-kernel' => '^6.4',
             ]
         ]));
@@ -127,6 +127,7 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
         $this->assertContains('json', $extensions);
-        $this->assertCount(1, $extensions); // 重复的扩展应该被去重
+        $this->assertContains('mbstring', $extensions);
+        $this->assertCount(2, $extensions); // 不同的扩展不会被去重
     }
 }

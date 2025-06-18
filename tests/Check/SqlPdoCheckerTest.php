@@ -10,6 +10,7 @@ use HealthCheckBundle\Enum\SqlOperatorEnum;
 use Laminas\Diagnostics\Result\Failure;
 use Laminas\Diagnostics\Result\Skip;
 use Laminas\Diagnostics\Result\Success;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class SqlPdoCheckerTest extends TestCase
