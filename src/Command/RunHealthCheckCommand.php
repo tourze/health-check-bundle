@@ -18,6 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class RunHealthCheckCommand extends Command
 {
+    public const NAME = 'health-check:run';
     public function __construct(
         private readonly CheckerService $checkerService,
     ) {

@@ -11,18 +11,12 @@ use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
 use Tourze\DoctrineTrackBundle\Attribute\TrackColumn;
 use Tourze\DoctrineUserBundle\Attribute\CreatedByColumn;
 use Tourze\DoctrineUserBundle\Attribute\UpdatedByColumn;
-use Tourze\EasyAdmin\Attribute\Column\BoolColumn;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Field\FormField;
 
 #[ORM\Entity(repositoryClass: SqlCheckerRepository::class)]
-#[ORM\Table(name: 'health_sql_checker')]
-class SqlChecker
+#[ORM\Table(name: 'health_sql_checker', options: ['comment' => 'SQL健康检查'])]
+class SqlChecker implements \Stringable
 {
     use TimestampableAware;
-    #[ListColumn(order: -1)]
-    #[ExportColumn]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
@@ -46,12 +40,9 @@ class SqlChecker
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '备注'])]
     private ?string $remark = null;
 
-    #[BoolColumn]
     #[IndexColumn]
     #[TrackColumn]
     #[ORM\Column(type: Types::BOOLEAN, nullable: true, options: ['comment' => '有效', 'default' => 0])]
-    #[ListColumn(order: 97)]
-    #[FormField(order: 97)]
     private ?bool $valid = false;
 
     #[CreatedByColumn]
@@ -167,4 +158,10 @@ class SqlChecker
     public function getUpdatedBy(): ?string
     {
         return $this->updatedBy;
-    }}
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('SqlChecker[%d]: %s', $this->id ?? 0, $this->name ?? 'Unnamed');
+    }
+}

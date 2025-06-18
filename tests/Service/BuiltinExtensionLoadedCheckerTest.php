@@ -80,8 +80,6 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
-
-        $this->assertIsArray($extensions);
         $this->assertEmpty($extensions);
     }
 
@@ -104,8 +102,6 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
-
-        $this->assertIsArray($extensions);
         $this->assertContains('json', $extensions);
         $this->assertContains('pdo', $extensions);
         $this->assertCount(2, $extensions);
@@ -130,8 +126,6 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
-
-        $this->assertIsArray($extensions);
         $this->assertContains('json', $extensions);
         $this->assertCount(1, $extensions); // 重复的扩展应该被去重
     }
