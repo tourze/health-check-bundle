@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 class CheckerService
 {
     public function __construct(
-        #[TaggedIterator('health-check.check')] private readonly iterable $builtInCheckers,
+        #[TaggedIterator(tag: 'health-check.check')] private readonly iterable $builtInCheckers,
         private readonly SqlCheckerRepository $sqlCheckerRepository,
         private readonly EntityManagerInterface $entityManager,
     )

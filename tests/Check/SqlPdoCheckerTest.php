@@ -166,7 +166,7 @@ class SqlPdoCheckerTest extends TestCase
         }
     }
 
-    public function operatorDataProvider(): array
+    public static function operatorDataProvider(): array
     {
         return [
             'GT_true' => [SqlOperatorEnum::GT, 10, 5, true],
