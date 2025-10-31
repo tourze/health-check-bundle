@@ -5,32 +5,34 @@ namespace HealthCheckBundle\Tests\Service;
 use HealthCheckBundle\Service\BuiltinDirPermissionChecker;
 use Laminas\Diagnostics\Result\Failure;
 use Laminas\Diagnostics\Result\Success;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-class BuiltinDirPermissionCheckerTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(BuiltinDirPermissionChecker::class)]
+final class BuiltinDirPermissionCheckerTest extends TestCase
 {
     private string $tempDir;
 
     protected function setUp(): void
     {
         parent::setUp();
-
         // 创建临时目录
         $this->tempDir = sys_get_temp_dir() . '/health-check-test-' . uniqid();
-        mkdir($this->tempDir, 0755, true);
+        mkdir($this->tempDir, 0o755, true);
 
         // 创建模拟目录
-        mkdir($this->tempDir . '/cache', 0755);
-        mkdir($this->tempDir . '/logs', 0755);
-        mkdir($this->tempDir . '/data', 0755);
+        mkdir($this->tempDir . '/cache', 0o755);
+        mkdir($this->tempDir . '/logs', 0o755);
+        mkdir($this->tempDir . '/data', 0o755);
     }
 
     protected function tearDown(): void
     {
         // 清理临时目录
         $this->removeDirectory($this->tempDir);
-
-        parent::tearDown();
     }
 
     private function removeDirectory(string $dir): void
@@ -53,7 +55,7 @@ class BuiltinDirPermissionCheckerTest extends TestCase
         $checker = new BuiltinDirPermissionChecker(
             $this->tempDir . '/cache',
             $this->tempDir . '/logs',
-            $this->tempDir . '/data'
+            $this->tempDir
         );
 
         $this->assertEquals('检查基础目录权限', $checker->getLabel());
@@ -64,7 +66,7 @@ class BuiltinDirPermissionCheckerTest extends TestCase
         $checker = new BuiltinDirPermissionChecker(
             $this->tempDir . '/cache',
             $this->tempDir . '/logs',
-            $this->tempDir . '/data'
+            $this->tempDir
         );
 
         $result = $checker->check();
@@ -75,12 +77,12 @@ class BuiltinDirPermissionCheckerTest extends TestCase
     public function testCheckWithNonWritableDir(): void
     {
         // 修改目录权限为只读
-        chmod($this->tempDir . '/logs', 0444);
+        chmod($this->tempDir . '/logs', 0o444);
 
         $checker = new BuiltinDirPermissionChecker(
             $this->tempDir . '/cache',
             $this->tempDir . '/logs',
-            $this->tempDir . '/data'
+            $this->tempDir
         );
 
         $result = $checker->check();
@@ -91,17 +93,17 @@ class BuiltinDirPermissionCheckerTest extends TestCase
 
     public function testCheckWithNonExistentDir(): void
     {
-        $nonExistentDir = $this->tempDir . '/non-existent';
+        $nonExistentParentDir = $this->tempDir . '/non-existent-parent';
 
         $checker = new BuiltinDirPermissionChecker(
             $this->tempDir . '/cache',
             $this->tempDir . '/logs',
-            $nonExistentDir
+            $nonExistentParentDir
         );
 
         $result = $checker->check();
 
         $this->assertInstanceOf(Failure::class, $result);
-        $this->assertStringContainsString($nonExistentDir, $result->getMessage());
+        $this->assertStringContainsString($nonExistentParentDir . '/data', $result->getMessage());
     }
 }

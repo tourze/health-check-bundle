@@ -3,10 +3,18 @@
 namespace HealthCheckBundle\Tests\Service;
 
 use HealthCheckBundle\Service\BuiltinDiskUsageChecker;
+use Laminas\Diagnostics\Result\Failure;
+use Laminas\Diagnostics\Result\ResultInterface;
+use Laminas\Diagnostics\Result\Success;
+use Laminas\Diagnostics\Result\Warning;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
-class BuiltinDiskUsageCheckerTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(BuiltinDiskUsageChecker::class)]
+final class BuiltinDiskUsageCheckerTest extends TestCase
 {
     public function testGetLabel(): void
     {
@@ -21,7 +29,7 @@ class BuiltinDiskUsageCheckerTest extends TestCase
     {
         $checker = new BuiltinDiskUsageChecker();
 
-        $reflection = new ReflectionClass($checker);
+        $reflection = new \ReflectionClass($checker);
 
         $warningProp = $reflection->getProperty('warningThreshold');
         $warningProp->setAccessible(true);
@@ -38,29 +46,29 @@ class BuiltinDiskUsageCheckerTest extends TestCase
     public function testCheckResultsWithDifferentThresholds(): void
     {
         $checker = new BuiltinDiskUsageChecker();
-        
+
         // 测试check方法返回的是Result对象
         $result = $checker->check();
-        $this->assertInstanceOf(\Laminas\Diagnostics\Result\ResultInterface::class, $result);
-        
+        $this->assertInstanceOf(ResultInterface::class, $result);
+
         // 测试实际磁盘使用情况
         // 因为这是在真实环境中运行，我们只验证结果的类型
         $possibleResults = [
-            \Laminas\Diagnostics\Result\Success::class,
-            \Laminas\Diagnostics\Result\Warning::class,
-            \Laminas\Diagnostics\Result\Failure::class,
+            Success::class,
+            Warning::class,
+            Failure::class,
         ];
-        
+
         $resultClass = get_class($result);
-        $this->assertContains($resultClass, $possibleResults, 
+        $this->assertContains($resultClass, $possibleResults,
             sprintf('Result should be one of Success/Warning/Failure, got %s', $resultClass));
-        
+
         // 验证结果消息格式
         $message = $result->getMessage();
         $this->assertNotEmpty($message);
-        
+
         // 消息应该包含百分比信息 - 注意匹配 "percent" 或 "%"
-        $this->assertMatchesRegularExpression('/\d+(\.\d+)?(\s+percent|%)/', $message, 
+        $this->assertMatchesRegularExpression('/\d+(\.\d+)?(\s+percent|%)/', $message,
             'Result message should contain percentage');
     }
 }

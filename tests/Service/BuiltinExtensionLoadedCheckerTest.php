@@ -3,34 +3,32 @@
 namespace HealthCheckBundle\Tests\Service;
 
 use HealthCheckBundle\Service\BuiltinExtensionLoadedChecker;
-use PHPUnit\Framework\MockObject\MockObject;
+use HealthCheckBundle\Tests\Service\TestKernel;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionObject;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class BuiltinExtensionLoadedCheckerTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(BuiltinExtensionLoadedChecker::class)]
+final class BuiltinExtensionLoadedCheckerTest extends TestCase
 {
-    /**
-     * @var KernelInterface&MockObject
-     */
-    private $kernel;
     private string $tempDir;
+
     private string $composerJsonPath;
+
+    private KernelInterface $kernel;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        // 创建一个模拟的内核
-        $this->kernel = $this->createMock(KernelInterface::class);
-
         // 创建一个临时目录作为项目目录
         $this->tempDir = sys_get_temp_dir() . '/health-check-ext-test-' . uniqid();
-        mkdir($this->tempDir, 0755, true);
+        mkdir($this->tempDir, 0o755, true);
 
-        // 设置模拟内核返回临时目录作为项目目录
-        $this->kernel->method('getProjectDir')
-            ->willReturn($this->tempDir);
+        // 创建一个测试用的Kernel实例
+        $this->kernel = new TestKernel($this->tempDir);
 
         // 创建一个模拟的 composer.json 文件
         $this->composerJsonPath = $this->tempDir . '/composer.json';
@@ -46,8 +44,6 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         if (is_dir($this->tempDir)) {
             rmdir($this->tempDir);
         }
-
-        parent::tearDown();
     }
 
     public function testGetLabel(): void
@@ -56,7 +52,7 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
         file_put_contents($this->composerJsonPath, json_encode([
             'require' => [
                 'php' => '^8.1',
-            ]
+            ],
         ]));
 
         $checker = new BuiltinExtensionLoadedChecker($this->kernel);
@@ -70,13 +66,13 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
             'require' => [
                 'php' => '^8.1',
                 'symfony/http-kernel' => '^6.4',
-            ]
+            ],
         ]));
 
         $checker = new BuiltinExtensionLoadedChecker($this->kernel);
 
         // 使用反射获取扩展列表
-        $reflectionObject = new ReflectionObject($checker);
+        $reflectionObject = new \ReflectionObject($checker);
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
@@ -92,16 +88,17 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
                 'ext-json' => '*',
                 'ext-pdo' => '*',
                 'symfony/http-kernel' => '^6.4',
-            ]
+            ],
         ]));
 
         $checker = new BuiltinExtensionLoadedChecker($this->kernel);
 
         // 使用反射获取扩展列表
-        $reflectionObject = new ReflectionObject($checker);
+        $reflectionObject = new \ReflectionObject($checker);
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
+        self::assertIsArray($extensions);
         $this->assertContains('json', $extensions);
         $this->assertContains('pdo', $extensions);
         $this->assertCount(2, $extensions);
@@ -116,16 +113,17 @@ class BuiltinExtensionLoadedCheckerTest extends TestCase
                 'ext-json' => '*',
                 'ext-mbstring' => '*',
                 'symfony/http-kernel' => '^6.4',
-            ]
+            ],
         ]));
 
         $checker = new BuiltinExtensionLoadedChecker($this->kernel);
 
         // 使用反射获取扩展列表
-        $reflectionObject = new ReflectionObject($checker);
+        $reflectionObject = new \ReflectionObject($checker);
         $extensionsProperty = $reflectionObject->getProperty('extensions');
         $extensionsProperty->setAccessible(true);
         $extensions = $extensionsProperty->getValue($checker);
+        self::assertIsArray($extensions);
         $this->assertContains('json', $extensions);
         $this->assertContains('mbstring', $extensions);
         $this->assertCount(2, $extensions); // 不同的扩展不会被去重

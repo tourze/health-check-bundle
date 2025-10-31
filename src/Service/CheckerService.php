@@ -5,18 +5,24 @@ namespace HealthCheckBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use HealthCheckBundle\Check\SqlPdoChecker;
 use HealthCheckBundle\Repository\SqlCheckerRepository;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Laminas\Diagnostics\Check\CheckInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
-class CheckerService
+readonly class CheckerService
 {
+    /**
+     * @param iterable<CheckInterface> $builtInCheckers
+     */
     public function __construct(
-        #[TaggedIterator(tag: 'health-check.check')] private readonly iterable $builtInCheckers,
-        private readonly SqlCheckerRepository $sqlCheckerRepository,
-        private readonly EntityManagerInterface $entityManager,
-    )
-    {
+        #[AutowireIterator(tag: 'health-check.check')] private iterable $builtInCheckers,
+        private SqlCheckerRepository $sqlCheckerRepository,
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
+    /**
+     * @return iterable<CheckInterface>
+     */
     public function getCheckers(): iterable
     {
         foreach ($this->builtInCheckers as $checker) {

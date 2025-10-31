@@ -31,14 +31,14 @@ class SqlPdoChecker implements CheckInterface
             $stmt = $this->connection->executeQuery($this->sqlChecker->getSql());
             $result = $stmt->fetchOne();
 
-            if ($result === false) {
+            if (false === $result) {
                 return new Failure(sprintf(
                     '[%s] SQL执行失败: 未返回数据',
                     $this->sqlChecker->getName()
                 ));
             }
 
-            $value = (int)$result;
+            $value = is_numeric($result) ? (int) $result : 0;
             $compareValue = $this->sqlChecker->getCompareValue();
             $operator = $this->sqlChecker->getOperator();
 

@@ -4,7 +4,6 @@ namespace HealthCheckBundle\Command;
 
 use HealthCheckBundle\Service\CheckerService;
 use Laminas\Diagnostics\Result\Collection;
-use Laminas\Diagnostics\Runner\Reporter\BasicConsole;
 use Laminas\Diagnostics\Runner\Runner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,6 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class RunHealthCheckCommand extends Command
 {
     public const NAME = 'health-check:run';
+
     public function __construct(
         private readonly CheckerService $checkerService,
     ) {
@@ -31,12 +31,13 @@ class RunHealthCheckCommand extends Command
         $io->title('开始执行健康检查');
 
         $checkers = $this->checkerService->getCheckers();
-        if (empty($checkers)) {
+        if ([] === $checkers) {
             $io->warning('没有找到可用的健康检查器');
+
             return Command::SUCCESS;
         }
 
-        $runner = new Runner(reporter: new BasicConsole());
+        $runner = new Runner();
         foreach ($checkers as $checker) {
             $runner->addCheck($checker);
         }

@@ -7,6 +7,9 @@ services:
   # 如果确认要使用自动扫描、自动注册，建议尽可能将要扫描的目录路径收缩，不要设置那么大的范围
   HealthCheckBundle\Command\:
     resource: '../../Command/'
+  HealthCheckBundle\Controller\:
+    resource: '../../Controller/'
+    tags: ['controller.service_arguments']
   HealthCheckBundle\Repository\:
     resource: '../../Repository/'
   HealthCheckBundle\Service\:

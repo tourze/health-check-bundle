@@ -8,18 +8,14 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class BuiltinDirPermissionChecker extends DirWritable
 {
     public function __construct(
-        #[Autowire(param: '%kernel.cache_dir%')]
-        string $cacheDir,
-        #[Autowire(param: '%kernel.logs_dir%')]
-        string $logDir,
-        #[Autowire(param: '%kernel.project_dir%/data')]
-        string $dataDir,
-    )
-    {
+        #[Autowire(param: '%kernel.cache_dir%')] string $cacheDir,
+        #[Autowire(param: '%kernel.logs_dir%')] string $logDir,
+        #[Autowire(param: '%kernel.project_dir%')] string $projectDir,
+    ) {
         parent::__construct([
             $cacheDir,
             $logDir,
-            $dataDir,
+            $projectDir . '/data',
         ]);
     }
 

@@ -12,9 +12,36 @@ class BuiltinExtensionLoadedChecker extends ExtensionLoaded
         $extensions = [];
 
         // 从composer.json拉依赖
-        $composer = json_decode(file_get_contents($kernel->getProjectDir() . '/composer.json'), true);
-        foreach ($composer['require'] ?? [] as $extensionName => $version) {
-            if (str_starts_with($extensionName, 'ext-')) {
+        $composerPath = $kernel->getProjectDir() . '/composer.json';
+        if (!file_exists($composerPath)) {
+            parent::__construct([]);
+
+            return;
+        }
+
+        $composerContent = file_get_contents($composerPath);
+        if (false === $composerContent) {
+            parent::__construct([]);
+
+            return;
+        }
+
+        $composer = json_decode($composerContent, true);
+        if (!is_array($composer)) {
+            parent::__construct([]);
+
+            return;
+        }
+
+        $require = $composer['require'] ?? [];
+        if (!is_array($require)) {
+            parent::__construct([]);
+
+            return;
+        }
+
+        foreach ($require as $extensionName => $version) {
+            if (is_string($extensionName) && str_starts_with($extensionName, 'ext-')) {
                 $extensionName = substr($extensionName, 4);
                 $extensions[] = $extensionName;
             }
