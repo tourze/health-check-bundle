@@ -85,8 +85,7 @@ final class SqlCheckerCrudControllerTest extends HealthCheckEasyAdminTestCase
 
     public function testIndexPage(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         $crawler = $client->request('GET', '/admin');
         self::assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
@@ -207,8 +206,7 @@ final class SqlCheckerCrudControllerTest extends HealthCheckEasyAdminTestCase
     public function testUpdateEntity(): void
     {
         // Test updateEntity functionality through integration test
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // Create test entity with all required fields
         $entity = new SqlChecker();
@@ -280,8 +278,7 @@ final class SqlCheckerCrudControllerTest extends HealthCheckEasyAdminTestCase
      */
     public function testEditPagePrefillsExistingDataWithCreatedData(): void
     {
-        $client = self::createClientWithDatabase();
-        $this->loginAsAdmin($client);
+        $client = self::createAuthenticatedClient();
 
         // 先创建一个测试实体
         $entity = new SqlChecker();
