@@ -7,6 +7,7 @@ use Laminas\Diagnostics\Check\CheckInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Tourze\BundleDependency\BundleDependencyInterface;
+use Tourze\EasyAdminMenuBundle\EasyAdminMenuBundle;
 
 class HealthCheckBundle extends Bundle implements BundleDependencyInterface
 {
@@ -23,6 +24,7 @@ class HealthCheckBundle extends Bundle implements BundleDependencyInterface
     {
         return [
             DoctrineBundle::class => ['all' => true],
+            EasyAdminMenuBundle::class => ['all' => true],
         ];
     }
 }
