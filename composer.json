@@ -53,6 +53,5 @@
     "psr-4": {
       "HealthCheckBundle\\Tests\\": "tests"
     }
-  },
-  "version": "1.0.0"
+  }
 }
