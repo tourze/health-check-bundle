@@ -32,7 +32,7 @@ final class RunHealthCheckCommandTest extends AbstractCommandTestCase
         $command = self::getContainer()->get(RunHealthCheckCommand::class);
         self::assertInstanceOf(RunHealthCheckCommand::class, $command);
         $application = new Application();
-        $application->add($command);
+        $application->addCommand($command);
 
         return new CommandTester($command);
     }

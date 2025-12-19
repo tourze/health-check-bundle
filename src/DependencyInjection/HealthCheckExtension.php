@@ -5,7 +5,7 @@ namespace HealthCheckBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class HealthCheckExtension extends AutoExtension
+final class HealthCheckExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {
